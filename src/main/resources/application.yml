@@ -20,11 +20,11 @@ spring:
 
 app:
   ai:
-    embedding-model: ${AI_EMBEDDING_MODEL:text-embedding-3-small}
-    embedding-dimension: ${AI_EMBEDDING_DIMENSION:1536}
+    embedding-model: ${AI_EMBEDDING_MODEL:local-dense}
+    embedding-dimension: ${AI_EMBEDDING_DIMENSION:${EMBEDDING_DIMENSION:128}}
     chat-model: ${AI_CHAT_MODEL:gpt-4o-mini}
-    similarity-threshold: ${AI_SIMILARITY_THRESHOLD:0.7}
-    top-k: ${AI_TOP_K:5}
+    similarity-threshold: ${AI_SIMILARITY_THRESHOLD:${RAG_DEFAULT_MIN_SCORE:0.1}}
+    top-k: ${AI_TOP_K:${RAG_DEFAULT_TOP_K:5}}
     api-key: ${AI_API_KEY:}
 
 eureka:

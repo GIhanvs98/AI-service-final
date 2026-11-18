@@ -27,7 +27,7 @@ public class AiServiceImpl implements AiService {
     public AiServiceImpl(
             VectorStoreService vectorStoreService,
             @Value("${app.ai.top-k:5}") int defaultTopK,
-            @Value("${app.ai.similarity-threshold:0.7}") double defaultMinScore
+            @Value("${app.ai.similarity-threshold:0.1}") double defaultMinScore
     ) {
         this.vectorStoreService = vectorStoreService;
         this.defaultTopK = defaultTopK;
