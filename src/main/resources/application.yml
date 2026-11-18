@@ -1,0 +1,59 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:ai-service}
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:knowledge_vector_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+app:
+  ai:
+    embedding-model: ${AI_EMBEDDING_MODEL:text-embedding-3-small}
+    embedding-dimension: ${AI_EMBEDDING_DIMENSION:1536}
+    chat-model: ${AI_CHAT_MODEL:gpt-4o-mini}
+    similarity-threshold: ${AI_SIMILARITY_THRESHOLD:0.7}
+    top-k: ${AI_TOP_K:5}
+    api-key: ${AI_API_KEY:}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: ${EUREKA_HOSTNAME:localhost}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
+# Spring Boot Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE:health,info}
+  endpoint:
+    health:
+      show-details: ${MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS:always}
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
