@@ -38,17 +38,22 @@ public class AiServiceImpl implements AiService {
     public QueryResponse queryKnowledge(QueryRequest request) {
         long startTime = System.currentTimeMillis();
 
+        String query = request.getEffectiveQuery();
+        if (query.isBlank()) {
+            throw new IllegalArgumentException("Query text is required");
+        }
+
         int topK = (request.topK() != null && request.topK() > 0) ? request.topK() : defaultTopK;
         double minScore = (request.minScore() != null && request.minScore() >= 0.0) ? request.minScore() : defaultMinScore;
 
-        log.info("Executing RAG query: '{}' (topK: {}, minScore: {})", request.query(), topK, minScore);
+        log.info("Executing RAG query: '{}' (topK: {}, minScore: {})", query, topK, minScore);
 
-        List<SimilarChunkResponse> citations = vectorStoreService.search(request.query(), topK, minScore);
+        List<SimilarChunkResponse> citations = vectorStoreService.search(query, topK, minScore);
 
         String answer;
         if (citations.isEmpty()) {
             answer = "I could not find any matching documents or passages in the enterprise knowledge base to answer your question: '"
-                    + request.query() + "'. Please try rephrasing or uploading relevant documentation.";
+                    + query + "'. Please try rephrasing or uploading relevant documentation.";
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("Based on the enterprise knowledge base, here is the answer to your query:\n\n");
@@ -64,6 +69,6 @@ public class AiServiceImpl implements AiService {
         }
 
         long processingTime = System.currentTimeMillis() - startTime;
-        return new QueryResponse(request.query(), answer, citations, processingTime);
+        return new QueryResponse(query, answer, citations, processingTime);
     }
 }
